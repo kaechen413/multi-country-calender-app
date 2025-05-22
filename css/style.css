@@ -2,10 +2,15 @@
 body {
   font-family: sans-serif;
   margin: 20px;
-  background-color: #FFFBDE;
+  background-color: #faf8ec;
 }
 h1 {
   text-align: center;
+}
+
+#select {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 #calendar {
   margin: auto;
