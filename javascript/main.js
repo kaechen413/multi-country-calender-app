@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   calendar.render();
 
   const select = document.getElementById("country-select");
+  const badgeContainer = document.getElementById("badge-container");
 
   fetch("https://restcountries.com/v3.1/all")
     .then(response => response.json())
@@ -17,53 +18,78 @@ document.addEventListener('DOMContentLoaded', function () {
         if (country.cca2 && country.name.common) {
           fetch(`https://date.nager.at/api/v3/PublicHolidays/2025/${country.cca2}`)
             .then(response => {
-                          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text();
-          })
+              if (response.ok) {
+                return response.text();
+              }
+            })
           .then(text => {
             if (text) {
-              const option = document.createElement("option");
-              option.value = country.cca2;
-              option.textContent = country.name.common;
-              select.appendChild(option);
+              try {
+                const data = JSON.parse(text);
+                if (data.length > 0) {
+                  const option = document.createElement("option");
+                  option.value = country.cca2;
+                  option.textContent = country.name.common;
+                  select.appendChild(option);
+                }
+              } catch (error) {
+                console.error(`Error parsing holidays for ${country.name.common}:`, error);
+              }
             }
           });
-      };
+      }
     });
-
-    select.addEventListener("change", (e) => {
-      console.log(Array.from(select.selectedOptions));
-      const countries = Array.from(select.selectedOptions).map(option => option.value);
-      countries.forEach(country => {
-        fetch(`https://date.nager.at/api/v3/PublicHolidays/2025/${country}`)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text();
-          })
-          .then(text => {
-            if (!text) {
-              document.getElementById("alert").innerHTML = `<div class="alert alert-danger" role="alert">No data found for ${country}</div>`;
-              return;
-            }
-            document.getElementById("alert").innerHTML = '';
-            const data = JSON.parse(text);
-            const events = data.map(holiday => ({
-              title: `${holiday.localName} (${country})`,
-              start: holiday.date,
-              allDay: true,
-              color: colors.sample || '#ffffff' // Default to white if no color is defined
-            }));
-            events.forEach(event => calendar.addEvent(event));
-          })
-          .catch(error => console.error(`Error fetching holidays for ${country}:`, error));
-      });
   });
 
-  const colors = {
-    sample: '#34A853'
-  };
+    select.addEventListener("change", (e) => {
+      const countryName = e.currentTarget.selectedOptions[0].textContent;
+      const countryCode = e.currentTarget.selectedOptions[0].value;
+      // Prevent duplicates
+      if ([...badgeContainer.children].some(badge => badge.dataset.value === countryName)) return;
+
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = countryName;
+      badge.dataset.value = countryName;
+      badge.style.backgroundColor = "#129990";
+      badgeContainer.appendChild(badge);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "btn-close btn-close-white ms-2";
+      deleteBtn.style.fontSize = "0.7em";
+      badge.appendChild(deleteBtn);
+      deleteBtn.addEventListener("click", (e) => {
+        badge.remove();
+        calendar.getEvents().forEach(event => {
+          if (event.title.includes(countryCode)) {
+            event.remove();
+          }
+        });
+      });
+      const years = [2024, 2025, 2026];
+      const rand_Color = colors[Math.floor(Math.random() * colors.length)];
+      years.forEach(year => {
+        fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${countryCode}`)
+          .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.text();
+            })
+            .then(text => {
+              const data = JSON.parse(text);
+              const events = data.map(holiday => ({
+                title: `${holiday.localName} (${countryCode})`,
+                start: holiday.date,
+                allDay: true,
+                color: rand_Color || '#ffffff' // Default to white if no color is defined
+              }));
+              events.forEach(event => calendar.addEvent(event));
+            })
+            .catch(error => console.error(`Error fetching holidays for ${countryCode}:`, error));
+      });
+    });
+
+  const colors = ['#90D1CA', '#129990', '#096B68'];
 });

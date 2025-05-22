@@ -13,17 +13,14 @@
 <div class="container">
   <h1>My calendar</h1>
 
-  <div class="row">
-    <div class="col-4">
-      <select id="country-select" class="form-select" aria-label="Country select" multiple="multiple">
-        <option selected>Choose a country</option>
+
+      <select id="country-select" class="form-select" aria-label="Country select">
+        <option disabled selected>Choose a country</option>
       </select>
-    </div>
-    <div class="col-8">
-      <div id="alert"></div>
+      <div id="badge-container"></div>
       <div id="calendar"></div>
     </div>
-  </div>
+
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script src="./javascript/main.js"></script>
