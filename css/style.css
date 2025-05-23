@@ -1,22 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400..700&display=swap');
 body {
-  font-family: sans-serif;
+  font-family: Markazi Text;
   margin: 20px;
-  background-color: #faf8ec;
+  background: #FFF9F5;
+  min-height: 100vh;
 }
 h1 {
   text-align: center;
 }
 
-#select {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+#country-select {
+  box-shadow: 0px 12px 10px rgba(0, 0, 0, 0.08);
   border-radius: 8px;
+  height: 60px;
+  font-size: 27px;
+}
+
+#country-select option {
+  font-size: 15px;
+  line-height: 1;
+  padding: 6px 12px;
+  background: #fff;     /* White background for dropdown options */
+  color: #333;
 }
 #calendar {
   margin: auto;
-  background-color: #fff;
+  background-color: #FFFAF5;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 12px 10px rgba(0, 0, 0, 0.08);
   border-radius: 8px;
 }
 
@@ -25,17 +36,55 @@ h1 {
   color: #333;
 }
 
-#calendar button {
-  background-color: #129990;
-  border-color: #90D1CA;
-}
-
 #badge-container {
   display: flex;
   flex-wrap: wrap;
   margin: 10px;
+}
+#badge-container span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  padding: 0 12px;
+  min-height: 32px;
+}
 
-  span {
-    margin: 5px;
-  }
+/* FullCalendar day grid cell hover effect */
+.fc-daygrid-day {
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.fc-daygrid-day:hover {
+  background: #f5ede6; /* soft beige to match #FFFAF5 */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.fc .fc-button {
+  background: #f5ede6;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fc .fc-button:hover,
+.fc .fc-button:focus {
+  background: #e4ecb7;
+  color: #129990;
+}
+
+.fc .fc-button.fc-button-primary {
+  background: #129990;
+  color: #fff;
+  border: none;
+}
+
+.fc .fc-button.fc-button-primary:hover,
+.fc .fc-button.fc-button-primary:focus {
+  background: #096B68;
+  color: #fff;
 }

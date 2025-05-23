@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if ([...badgeContainer.children].some(badge => badge.dataset.value === countryName)) return;
 
       const badge = document.createElement("span");
-      badge.className = "badge";
+      badge.className = "badge-bg-success rounded-pill me-2 text-center text-white";
+      badge.style.fontSize = "1em";
       badge.textContent = countryName;
       badge.dataset.value = countryName;
       badge.style.backgroundColor = "#129990";
